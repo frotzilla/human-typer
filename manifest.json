@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Human Typer",
+  "version": "1.0.0",
+  "description": "Types pasted text like a real person: adjustable speed, natural rhythm, smart typos with realistic corrections, and pauses.",
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Human Typer",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "background": { "service_worker": "background.js" },
+  "permissions": ["activeTab", "scripting", "storage", "debugger", "contextMenus", "clipboardRead", "offscreen"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+H" },
+      "description": "Open Human Typer"
+    },
+    "type-clipboard": {
+      "suggested_key": { "default": "Alt+Shift+V" },
+      "description": "Human-type the clipboard into the focused field"
+    },
+    "pause-resume": {
+      "suggested_key": { "default": "Alt+Shift+P" },
+      "description": "Pause / resume typing"
+    },
+    "stop": {
+      "suggested_key": { "default": "Alt+Shift+X" },
+      "description": "Stop typing"
+    }
+  }
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Human Typer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <img src="icons/icon32.png" alt="" width="26" height="26">
+      <div>
+        <h1>Human Typer</h1>
+        <p>Types like a real person</p>
+      </div>
+    </div>
+    <select id="preset" title="Presets"></select>
+  </header>
+
+  <main>
+    <!-- Text -->
+    <section class="card">
+      <div class="head">
+        <label for="text" class="h2">Text to type</label>
+        <div class="tools">
+          <button id="pasteBtn" class="ghost" type="button">Paste</button>
+          <button id="clearBtn" class="ghost" type="button">Clear</button>
+        </div>
+      </div>
+      <textarea id="text" spellcheck="false" placeholder="Paste the text you want typed out…"></textarea>
+      <div class="meta"><span id="counts">0 words</span><span id="eta"></span></div>
+    </section>
+
+    <!-- Speed -->
+    <details class="card fold" data-sec="speed">
+      <summary><span class="h2">Speed</span><span class="peek" data-peek="speed"></span></summary>
+      <div class="fold-body">
+        <div class="opt">
+          <div class="lbl">Measure in</div>
+          <div class="seg" data-k="speedMode"><button type="button" value="wpm">WPM</button><button type="button" value="ms">ms / key</button></div>
+        </div>
+        <div class="slider" data-show="speedMode=wpm">
+          <input type="range" min="10" max="200" step="1" data-k="wpm" aria-label="Words per minute">
+          <input type="number" min="5" max="400" data-k="wpm" class="num" aria-label="Words per minute"><span class="unit">wpm</span>
+        </div>
+        <div class="slider" data-show="speedMode=ms">
+          <input type="range" min="10" max="800" step="5" data-k="msPerChar" aria-label="Milliseconds per key">
+          <input type="number" min="1" max="5000" data-k="msPerChar" class="num" aria-label="Milliseconds per key"><span class="unit">ms</span>
+        </div>
+        <p class="hint" id="speedHint"></p>
+      </div>
+    </details>
+
+    <!-- Timing -->
+    <details class="card fold" data-sec="timing">
+      <summary><span class="h2">Human timing</span><span class="peek" data-peek="timing"></span></summary>
+      <div class="fold-body">
+        <div class="opt">
+          <div><div class="lbl">Variable latency</div><div class="desc">Random jitter on every keystroke</div></div>
+          <label class="switch"><input type="checkbox" data-k="variance.on"><span></span></label>
+        </div>
+        <div class="slider sub" data-dim="variance.on">
+          <input type="range" min="0" max="100" step="1" data-k="variance.amount" aria-label="Latency variance">
+          <output data-out="variance.amount" data-suffix="%"></output>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Natural rhythm</div><div class="desc">Faster on common letter pairs &amp; hand alternation, slower on capitals, numbers, symbols</div></div>
+          <label class="switch"><input type="checkbox" data-k="rhythm"><span></span></label>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Speed drift</div><div class="desc">Pace slowly wanders up and down</div></div>
+          <label class="switch"><input type="checkbox" data-k="drift"><span></span></label>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Warm-up</div><div class="desc">Starts a little slower</div></div>
+          <label class="switch"><input type="checkbox" data-k="warmup"><span></span></label>
+        </div>
+        <div class="opt col">
+          <div class="lbl">Fatigue <span class="muted">slower by the end</span></div>
+          <div class="slider">
+            <input type="range" min="0" max="60" step="1" data-k="fatigue" aria-label="Fatigue">
+            <output data-out="fatigue" data-suffix="%"></output>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Typos -->
+    <details class="card fold" data-sec="typos">
+      <summary>
+        <span class="h2">Typos</span><span class="peek" data-peek="typos"></span>
+        <label class="switch"><input type="checkbox" data-k="typos.on" aria-label="Typos"><span></span></label>
+      </summary>
+      <div class="fold-body" data-dim="typos.on">
+        <div class="opt col">
+          <div class="lbl">Frequency <span class="muted">share of words with a typo</span></div>
+          <div class="slider">
+            <input type="range" min="0" max="30" step="0.5" data-k="typos.rate" aria-label="Typo frequency">
+            <output data-out="typos.rate" data-suffix="%"></output>
+          </div>
+        </div>
+        <div class="opt col">
+          <div class="lbl">Then…</div>
+          <div class="seg wide" data-k="typos.fix">
+            <button type="button" value="leave">Leave</button><button type="button" value="backspace">Backspace</button><button type="button" value="arrows">Arrow keys</button><button type="button" value="mix">Mix</button>
+          </div>
+          <p class="hint" id="fixHint"></p>
+        </div>
+        <div class="opt" data-show="typos.fix=backspace|arrows|mix">
+          <div><div class="lbl">Noticed after</div><div class="desc">Keys typed before the typo is caught</div></div>
+          <div class="range2">
+            <input type="number" min="0" max="40" data-k="typos.noticeMin" class="num" aria-label="Notice after at least">
+            <span>to</span>
+            <input type="number" min="0" max="40" data-k="typos.noticeMax" class="num" aria-label="Notice after at most">
+          </div>
+        </div>
+        <div class="opt col" data-show="typos.fix=mix">
+          <div class="lbl">Left uncorrected</div>
+          <div class="slider">
+            <input type="range" min="0" max="100" step="1" data-k="typos.leavePct" aria-label="Share left uncorrected">
+            <output data-out="typos.leavePct" data-suffix="%"></output>
+          </div>
+        </div>
+        <div class="opt col">
+          <div class="lbl">Kinds of mistakes</div>
+          <div class="chips">
+            <label class="chip" title="Hit a neighbouring key: hellp, hekllo"><input type="checkbox" data-k="typos.kinds.adjacent"><span>Nearby keys</span></label>
+            <label class="chip" title="Real-world misspellings: recieve, definately, teh"><input type="checkbox" data-k="typos.kinds.misspell"><span>Common misspellings</span></label>
+            <label class="chip" title="Letters in the wrong order: form → from"><input type="checkbox" data-k="typos.kinds.transpose"><span>Swapped letters</span></label>
+            <label class="chip" title="Skipped letters, especially doubles: ocurred"><input type="checkbox" data-k="typos.kinds.omit"><span>Missed letters</span></label>
+            <label class="chip" title="Key pressed twice: thhe"><input type="checkbox" data-k="typos.kinds.double"><span>Double taps</span></label>
+            <label class="chip" title="Shift held too long or missed: THe, the"><input type="checkbox" data-k="typos.kinds.caseSlip"><span>Shift slips</span></label>
+            <label class="chip" title="Missed or misplaced space: ofthe, oft he"><input type="checkbox" data-k="typos.kinds.space"><span>Space slips</span></label>
+          </div>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Keyboard layout</div><div class="desc">Used for nearby-key typos and finger timing</div></div>
+          <select data-k="layout" id="layout"></select>
+        </div>
+      </div>
+    </details>
+
+    <!-- Pauses -->
+    <details class="card fold" data-sec="pauses">
+      <summary>
+        <span class="h2">Pauses</span><span class="peek" data-peek="pauses"></span>
+        <label class="switch"><input type="checkbox" data-k="pauses.on" aria-label="Pauses"><span></span></label>
+      </summary>
+      <div class="fold-body" data-dim="pauses.on">
+        <div class="chips">
+          <label class="chip" title="Short pause after , ; : and a longer one after . ! ?"><input type="checkbox" data-k="pauses.punctuation"><span>After punctuation</span></label>
+          <label class="chip" title="Longer pause at new lines and paragraphs"><input type="checkbox" data-k="pauses.paragraph"><span>Between paragraphs</span></label>
+          <label class="chip" title="Brief hesitation before long words"><input type="checkbox" data-k="pauses.hesitate"><span>Long-word hesitation</span></label>
+          <label class="chip" title="Occasional longer stops to think"><input type="checkbox" data-k="pauses.thinking"><span>Thinking pauses</span></label>
+        </div>
+        <div data-dim="pauses.thinking">
+          <div class="opt col">
+            <div class="lbl">Thinking pauses <span class="muted">share of words</span></div>
+            <div class="slider">
+              <input type="range" min="0" max="25" step="0.5" data-k="pauses.thinkingFreq" aria-label="Thinking pause frequency">
+              <output data-out="pauses.thinkingFreq" data-suffix="%"></output>
+            </div>
+          </div>
+          <div class="opt">
+            <div><div class="lbl">Thinking length</div></div>
+            <div class="range2">
+              <input type="number" min="0" max="60000" step="100" data-k="pauses.thinkingMin" class="num wide" aria-label="Shortest thinking pause (ms)">
+              <span>to</span>
+              <input type="number" min="0" max="60000" step="100" data-k="pauses.thinkingMax" class="num wide" aria-label="Longest thinking pause (ms)">
+              <span class="unit">ms</span>
+            </div>
+          </div>
+        </div>
+        <div class="opt col">
+          <div class="lbl">Pause length <span class="muted">punctuation, paragraphs, hesitation</span></div>
+          <div class="slider">
+            <input type="range" min="25" max="300" step="5" data-k="pauses.scale" aria-label="Pause length">
+            <output data-out="pauses.scale" data-suffix="%"></output>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <!-- Advanced -->
+    <details class="card fold" data-sec="advanced">
+      <summary><span class="h2">Advanced</span><span class="peek" data-peek="advanced"></span></summary>
+      <div class="fold-body">
+        <div class="opt col">
+          <div class="lbl">Keystroke engine</div>
+          <select data-k="engine">
+            <option value="debugger">Trusted keystrokes (recommended)</option>
+            <option value="dom">Simulated events (no banner)</option>
+          </select>
+          <p class="hint" id="engineHint"></p>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">New line key</div><div class="desc">Use Shift+Enter in chat apps where Enter sends</div></div>
+          <select data-k="newline"><option value="enter">Enter</option><option value="shiftEnter">Shift+Enter</option></select>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Countdown</div><div class="desc">Time to click into your field</div></div>
+          <div class="range2"><input type="number" min="0" max="30" data-k="countdown" class="num" aria-label="Countdown seconds"><span class="unit">sec</span></div>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Plain punctuation</div><div class="desc">Curly quotes → " ', em dash → --, … → ...</div></div>
+          <label class="switch"><input type="checkbox" data-k="normalize"><span></span></label>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Strip indentation</div><div class="desc">For code editors that auto-indent new lines</div></div>
+          <label class="switch"><input type="checkbox" data-k="stripIndent"><span></span></label>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">Safety auto-pause</div><div class="desc">Pause if the field loses focus or you press a key</div></div>
+          <label class="switch"><input type="checkbox" data-k="autoPause"><span></span></label>
+        </div>
+        <div class="opt">
+          <div><div class="lbl">On-page overlay</div><div class="desc">Progress, pause and stop while typing</div></div>
+          <label class="switch"><input type="checkbox" data-k="hud"><span></span></label>
+        </div>
+        <div class="shortcuts">
+          <div class="lbl">Shortcuts</div>
+          <ul id="shortcuts"></ul>
+          <button id="editShortcuts" class="link" type="button">Change shortcuts</button>
+        </div>
+      </div>
+    </details>
+  </main>
+
+  <footer>
+    <div id="error" class="error" hidden></div>
+    <div id="runBar" class="run" hidden>
+      <div class="run-top"><span id="runMsg">Typing…</span></div>
+      <div class="bar"><i id="runFill"></i></div>
+      <div class="run-btns">
+        <button id="pauseBtn" class="primary" type="button">Pause</button>
+        <button id="stopBtn" class="secondary" type="button">Stop</button>
+      </div>
+    </div>
+    <div id="startBar" class="start">
+      <button id="startBtn" class="primary big" type="button">Start typing</button>
+    </div>
+  </footer>
+
+  <script src="planner.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
