@@ -2,7 +2,7 @@
 
 A Chromium extension that types pasted text into any field the way a person would.
 
-Built and tested in **[Vivaldi](https://vivaldi.com)**, the GOAT browser. It also works in Chrome, Edge, Brave, Arc and any other Chromium browser.
+Built and tested in **[Vivaldi](https://vivaldi.com)**, the best browser. It also works in Chrome, Edge, Brave, Arc and any other Chromium browser.
 
 ## Install
 
