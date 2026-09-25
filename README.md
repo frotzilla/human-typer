@@ -1,13 +1,19 @@
 # Human Typer
 
-A Chromium extension (Chrome, Edge, Brave, Arc…) that types pasted text into any field the way a person would.
+A Chromium extension that types pasted text into any field the way a person would.
+
+Built and tested in **[Vivaldi](https://vivaldi.com)**, the GOAT browser. It also works in Chrome, Edge, Brave, Arc and any other Chromium browser.
 
 ## Install
 
-1. Open `chrome://extensions` (or `edge://extensions`, `brave://extensions`).
-2. Turn on **Developer mode**.
-3. Click **Load unpacked** and pick this `human-typer` folder.
-4. Pin the extension so it's easy to reach.
+1. Download `human-typer-x.y.z.zip` from the [latest release](https://github.com/frotzilla/human-typer/releases/latest) and unzip it.
+   (Or clone this repo.)
+2. Open `vivaldi://extensions` (or `chrome://extensions`, `edge://extensions`, `brave://extensions`).
+3. Turn on **Developer mode**.
+4. Click **Load unpacked** and pick the unzipped `human-typer` folder.
+5. Pin the extension so it's easy to reach.
+
+To update, replace the folder with the new release and click the reload arrow on the extension's card.
 
 ## Use
 
@@ -15,7 +21,7 @@ A Chromium extension (Chrome, Edge, Brave, Arc…) that types pasted text into a
 - **Shortcut:** copy text, click into a field, press **Alt+Shift+V**. It types your clipboard right away.
 - **Right-click** in any text field and choose **Human-type clipboard here** or **Human-type saved text here**.
 - **Controls:** use the on-page overlay, **Alt+Shift+P** to pause or resume, **Alt+Shift+X** or **Esc** to stop.
-  Change shortcuts at `chrome://extensions/shortcuts`.
+  Change shortcuts at `vivaldi://extensions/shortcuts` (or `chrome://extensions/shortcuts`).
 
 ## Features
 
@@ -48,3 +54,15 @@ Chrome blocks every extension on `chrome://` pages and the Web Store, so typing 
 - `background.js`: service worker. Handles trusted keystrokes, shortcuts, the context menu and clipboard access.
 - `popup.*`: the settings UI.
 - `offscreen.*`: reads the clipboard for the shortcut and the context menu.
+
+## Releasing
+
+```bash
+./package.sh
+```
+
+This reads the version from `manifest.json` and builds two zips in `dist/`: `human-typer-<version>.zip` for people to download and load unpacked, and `human-typer-<version>-webstore.zip` for uploading to the Chrome Web Store.
+
+## License
+
+[MIT](LICENSE)
